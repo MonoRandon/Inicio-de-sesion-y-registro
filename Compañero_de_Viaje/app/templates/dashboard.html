@@ -1,0 +1,84 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Trip Dashboard</title>
+</head>
+<body>
+    <h2>Welcome!</h2>
+    <a href="/logout">Logout</a>
+    <a href="/agregarviaje">Add a Job</a>
+    <!-- Aquí van las tablas de viajes del usuario y de otros usuarios -->
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel de Viajes</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <h2>Bienvenido, {{ session['user_name'] if session.get('user_name') else '' }}!</h2>
+    <a href="/logout">Cerrar sesión</a>
+    <a href="/agregarviaje">Agregar viaje</a>
+
+    <h3>Mis planes de viaje</h3>
+    <table border="1">
+        <tr>
+            <th>Destino</th>
+            <th>Descripción</th>
+            <th>Fecha inicio</th>
+            <th>Fecha fin</th>
+            <th>Acción</th>
+        </tr>
+        {% for viaje in viajes if viaje.user_id == session['user_id'] %}
+        <tr>
+            <td><a href="/vista/{{ viaje.id }}">{{ viaje.destination }}</a></td>
+            <td>{{ viaje.description }}</td>
+            <td>{{ viaje.travel_date_from }}</td>
+            <td>{{ viaje.travel_date_to }}</td>
+            <td>
+                <form action="/borrarviaje/{{ viaje.id }}" method="POST" style="display:inline;">
+                    <button type="submit">Eliminar</button>
+                </form>
+                <a href="/editarviaje/{{ viaje.id }}">Editar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h3>Planes de viaje de otros usuarios</h3>
+    <table border="1">
+        <tr>
+            <th>Destino</th>
+            <th>Descripción</th>
+            <th>Fecha inicio</th>
+            <th>Fecha fin</th>
+            <th>¿Unirse?</th>
+        </tr>
+        {% for viaje in viajes if viaje.user_id != session['user_id'] %}
+        <tr>
+            <td><a href="/vista/{{ viaje.id }}">{{ viaje.destination }}</a></td>
+            <td>{{ viaje.description }}</td>
+            <td>{{ viaje.travel_date_from }}</td>
+            <td>{{ viaje.travel_date_to }}</td>
+            <td>
+                <form action="/unirse/{{ viaje.id }}" method="POST">
+                    <button type="submit">Unirse</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul>
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+</body>
+</html>

@@ -1,0 +1,53 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add a Trip</title>
+</head>
+<body>
+    <h2>Add a Job</h2>
+    <form action="/crearviaje" method="POST">
+        <input type="text" name="destino" placeholder="Destino">
+        <input type="text" name="descripcion" placeholder="Descripción">
+        <input type="date" name="fecha_de_viaje_de" placeholder="Fecha de inicio">
+        <input type="date" name="fecha_de_viaje_a" placeholder="Fecha de fin">
+        <button type="submit">Submit</button>
+    </form>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul>
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{% if viaje %}Editar Viaje{% else %}Agregar Viaje{% endif %}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <h2>{% if viaje %}Editar Viaje{% else %}Agregar Viaje{% endif %}</h2>
+    <form action="{% if viaje %}/actualizarviaje/{{ viaje.id }}{% else %}/crearviaje{% endif %}" method="POST">
+        <input type="text" name="destino" placeholder="Destino" value="{{ viaje.destination if viaje else '' }}">
+        <input type="text" name="descripcion" placeholder="Descripción" value="{{ viaje.description if viaje else '' }}">
+        <input type="date" name="fecha_de_viaje_de" placeholder="Fecha de inicio" value="{{ viaje.travel_date_from if viaje else '' }}">
+        <input type="date" name="fecha_de_viaje_a" placeholder="Fecha de fin" value="{{ viaje.travel_date_to if viaje else '' }}">
+        <button type="submit">{% if viaje %}Actualizar{% else %}Agregar{% endif %}</button>
+    </form>
+    <a href="/dashboard">Volver al panel</a>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul>
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+</body>
+</html>
