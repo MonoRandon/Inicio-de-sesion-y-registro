@@ -3,7 +3,7 @@ import pymysql.cursors
 class MySQLConnection:
     def __init__(self, db):
         connection = pymysql.connect(host='localhost',
-                                    port= 5022,
+                                    port=3306,
                                     user='root',
                                     password='root',
                                     db=db,
@@ -11,23 +11,19 @@ class MySQLConnection:
                                     cursorclass=pymysql.cursors.DictCursor,
                                     autocommit=True)
         self.connection = connection
+
     def query_db(self, query, data=None):
         with self.connection.cursor() as cursor:
             try:
-                query = cursor.mogrify(query, data)
-                print('Correr el Query:', query)
                 cursor.execute(query, data)
-                if query.lower().find('insertar') >= 0:
-                    self.connection.commit()
-                    return cursor.lastrowid
-                elif query.lower().find('seleccionar') >= 0:
+                if query.strip().lower().startswith('select'):
                     result = cursor.fetchall()
                     return result
                 else:
                     self.connection.commit()
+                    return cursor.lastrowid
             except Exception as e:
-                print('Algo Salio mal', e)
-                return False
+                print('Error en query_db:', e)
+                return None
             finally:
                 self.connection.close()
-

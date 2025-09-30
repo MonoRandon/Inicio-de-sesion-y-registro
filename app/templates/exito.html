@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Bienvenido</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="exito-container">
+        <div class="exito-title">¡Bienvenido, {{ usuario.nombre }}!</div>
+        <div class="exito-msg">Tu registro o inicio de sesión fue exitoso.<br>¡Gracias por usar Compañero de Viaje!</div>
+        <a href="/logout" class="logout-btn">Cerrar sesión</a>
+    </div>
+</body>
+</html>
